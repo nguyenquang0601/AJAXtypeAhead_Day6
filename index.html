@@ -1,0 +1,87 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <meta name="theme-color" content="#fafafa">
+</head>
+<style>
+  html,body{
+    margin: 0;
+    /*height: 100%;*/
+    font-size: 15px;
+    background: #c39fc4;
+    font-family: Arial;
+    color: #222222;
+    list-style: none;
+  }
+  .pane{
+    margin: 5% 40%;
+  }
+  .suggest li{
+    list-style-type: none;
+    margin-left: -12%;
+  }
+
+</style>
+
+<body>
+    <div class="pane">
+        <input width="500px" style="margin: auto ; min-height: 20px; border-radius: 5px" class="search">
+
+        <ul class="suggest">
+          <li > Or City </li>
+          <li > Or State</li>
+        </ul>
+    </div>
+    <script>
+      const linkdata = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+      const cities = [];
+      fetch(linkdata)
+           .then( citi => citi.json())
+          .then(data => cities.push(...data));
+      function findCiti(wordtoMacth,cities) {
+          return cities.filter(place =>{
+              const  regex = new RegExp(wordtoMacth,'gi');
+              return place.city.match(regex) || place.state.match(regex);
+
+          })
+      }
+      function display() {
+          const arrayCiti = findCiti(this.value,cities);
+          console.table(arrayCiti);
+          let dem = 0;
+          const html = arrayCiti.map(place =>{
+             dem++;
+             if (dem< 25){
+                 return`
+              <li>
+                    <span class="name">${place.city} , ${place.state}</span>
+<!--                    <span class="population"> ${place.population}</span>-->
+              </li>
+              `;
+             }
+
+          }).join('');
+          sgess.innerHTML= html;
+      }
+      const serach = document.querySelector('.search');
+      const  sgess = document.querySelector('.suggest');
+      serach.addEventListener('keyup',display);
+
+
+    </script>
+</body>
+
+</html>
